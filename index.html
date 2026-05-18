@@ -1,973 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gobrax · KPIs Semanais</title>
+  <meta name="description" content="Sistema de gestão e apresentação de KPIs semanais — Gobrax Pós-Vendas" />
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
-:root{--y:#F5C518;--yd:#C9A000;--bg:#F7F5EF;--white:#fff;--dark:#1A1A1A;--gray:#6B6B6B;--lgray:#E8E6DF;--red:#E53935;--green:#2E7D32;--amber:#E65100}
-body{background:var(--bg);color:var(--dark);font-size:14px}
-.app{display:flex;height:700px;overflow:hidden;border-radius:12px;border:1px solid #ddd;position:relative}
-/* SIDEBAR */
-.sb{width:210px;flex-shrink:0;background:var(--dark);display:flex;flex-direction:column;overflow:hidden}
-.sb-logo{padding:18px 16px 14px;border-bottom:1px solid #333}
-.sb-brand{display:flex;align-items:center;gap:10px}
-.sb-icon{width:34px;height:34px;border-radius:8px;background:var(--y);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:var(--dark)}
-.sb-name{font-size:17px;font-weight:800;color:#fff;letter-spacing:-0.3px}
-.sb-sub{font-size:10px;color:#888;margin-top:1px}
-.sb-nav{flex:1;padding:10px 8px;overflow-y:auto}
-.sb-section{font-size:9px;font-weight:700;color:#555;letter-spacing:.1em;text-transform:uppercase;padding:10px 8px 4px}
-.nav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border-radius:8px;border:none;background:none;color:#aaa;font-size:12.5px;font-weight:500;cursor:pointer;text-align:left;transition:.15s;margin-bottom:1px}
-.nav-btn:hover{background:#2a2a2a;color:#fff}
-.nav-btn.active{background:var(--y);color:var(--dark);font-weight:700}
-.nav-btn i{font-size:15px;width:16px;flex-shrink:0}
-.sb-user{padding:12px 14px;border-top:1px solid #333}
-.sb-av{width:30px;height:30px;border-radius:50%;background:var(--y);color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
-.sb-uname{font-size:12px;font-weight:600;color:#fff}
-.sb-urole{font-size:10px;color:#888}
-.logout{margin-top:6px;font-size:11px;color:#666;background:none;border:none;cursor:pointer;padding:0;text-align:left}
-.logout:hover{color:#aaa}
-/* MAIN */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);min-width:0}
-.topbar{background:var(--white);border-bottom:1px solid var(--lgray);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.topbar-left{display:flex;align-items:center;gap:12px}
-.topbar-title{font-size:15px;font-weight:700;color:var(--dark)}
-.content{flex:1;overflow-y:auto;padding:18px}
-/* PAGES */
-.page{display:none}.page.on{display:block}
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid #ddd;background:var(--white);color:var(--dark);transition:.15s}
-.btn:hover{background:#f5f5f5}
-.btn-y{background:var(--y);border-color:var(--y);color:var(--dark)}
-.btn-y:hover{background:var(--yd);border-color:var(--yd)}
-.btn-sm{padding:5px 10px;font-size:11.5px}
-.btn-ghost{border-color:transparent;background:transparent;color:var(--gray)}
-.btn-ghost:hover{background:var(--lgray);color:var(--dark)}
-.btn-red{background:#fdecea;border-color:#f5c6c2;color:var(--red)}
-/* CARDS */
-.card{background:var(--white);border-radius:14px;border:1.5px solid var(--lgray);overflow:hidden}
-.card-p{padding:16px}
-/* AREA CARDS - like the reference image */
-.area-card{background:var(--white);border-radius:16px;border:2px solid var(--lgray);padding:18px;transition:.15s;cursor:pointer}
-.area-card:hover{border-color:var(--y);box-shadow:0 4px 16px rgba(245,197,24,.15)}
-.area-card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--lgray)}
-.area-icon-circle{width:44px;height:44px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.area-card-title{font-size:17px;font-weight:800;color:var(--dark)}
-.area-card-badge{font-size:10px}
-.kpi-line{display:flex;align-items:baseline;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f5f5f0}
-.kpi-line:last-child{border-bottom:none}
-.kpi-label{font-size:12px;color:#555;flex:1;padding-right:8px}
-.kpi-value{font-size:12.5px;font-weight:700;color:var(--y);text-align:right;flex-shrink:0}
-.kpi-value.green{color:#2E7D32}
-.kpi-value.red{color:#C62828}
-.kpi-value.gray{color:#999}
-.focus-box{background:#fffbea;border-radius:8px;border:1px dashed var(--y);padding:10px 12px;margin-top:12px;display:flex;gap:10px}
-.focus-icon{font-size:18px;flex-shrink:0}
-.focus-label{font-size:11px;font-weight:700;color:var(--yd);margin-bottom:2px}
-.focus-text{font-size:11.5px;color:#555;line-height:1.4}
-/* STATUS BADGES */
-.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10.5px;font-weight:700;border:1px solid}
-.b-green{background:#e8f5e9;color:#2E7D32;border-color:#a5d6a7}
-.b-yellow{background:#fffde7;color:#F57F17;border-color:var(--y)}
-.b-red{background:#ffebee;color:#C62828;border-color:#ef9a9a}
-.b-blue{background:#e3f2fd;color:#1565C0;border-color:#90caf9}
-.b-gray{background:#f5f5f5;color:#757575;border-color:#e0e0e0}
-/* PROGRESS */
-.prog-wrap{margin:6px 0}
-.prog-bar{height:7px;background:#eee;border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;border-radius:4px;transition:width .5s}
-/* STATS ROW */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.stat-box{background:var(--white);border-radius:12px;border:1.5px solid var(--lgray);padding:12px 14px}
-.stat-box-label{font-size:10.5px;color:var(--gray);margin-bottom:4px;font-weight:500}
-.stat-box-val{font-size:22px;font-weight:800;color:var(--dark)}
-/* TABLES */
-.tbl-wrap{overflow-x:auto;border-radius:12px;border:1.5px solid var(--lgray)}
-table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--white)}
-th{padding:9px 12px;background:#fafaf8;font-size:10.5px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--lgray);text-align:left;white-space:nowrap}
-td{padding:10px 12px;border-bottom:1px solid #f5f5f0;color:var(--dark);vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:#fafaf8}
-/* FORM */
-.fg{margin-bottom:12px}
-.fg label{display:block;font-size:11.5px;font-weight:700;color:var(--gray);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
-.fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;border:1.5px solid var(--lgray);border-radius:8px;font-size:13px;background:var(--white);color:var(--dark);outline:none;transition:.15s}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--y)}
-.fg textarea{resize:vertical;min-height:70px}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-/* LOGIN */
-.login-wrap{display:flex;width:100%;height:100%}
-.login-left{width:220px;background:var(--dark);padding:28px 22px;display:flex;flex-direction:column;justify-content:space-between;flex-shrink:0}
-.login-right{flex:1;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
-.login-card{background:var(--white);border-radius:16px;border:2px solid var(--lgray);padding:28px;width:100%;max-width:300px}
-.login-card h2{font-size:20px;font-weight:800;margin-bottom:3px}
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:14px}
-.qbtn{padding:6px 8px;border-radius:7px;border:1.5px solid var(--lgray);background:var(--white);font-size:11px;color:var(--gray);cursor:pointer;text-align:left;font-weight:600;transition:.15s}
-.qbtn:hover{border-color:var(--y);color:var(--dark);background:#fffbea}
-/* MODAL */
-.modal-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.open{display:flex}
-.modal-box{background:var(--white);border-radius:16px;width:100%;max-width:460px;max-height:85%;display:flex;flex-direction:column;border:2px solid var(--lgray)}
-.modal-head{padding:16px 20px;border-bottom:1px solid var(--lgray);display:flex;align-items:center;justify-content:space-between}
-.modal-head h3{font-size:15px;font-weight:800}
-.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);line-height:1}
-.modal-body{padding:20px;overflow-y:auto;flex:1}
-.modal-foot{padding:12px 20px;border-top:1px solid var(--lgray);display:flex;justify-content:flex-end;gap:8px}
-/* KPI SEMANAIS page */
-.kpis-header{background:var(--white);border-radius:14px;border:2px solid var(--lgray);padding:16px 20px;margin-bottom:16px}
-.kpis-logo-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
-.kpis-brand-name{font-size:24px;font-weight:900;color:var(--dark);letter-spacing:-1px}
-.kpis-brand-gb{font-size:24px;font-weight:900;color:var(--y);letter-spacing:-1px}
-.kpis-subtitle{font-size:11px;color:var(--gray);margin-top:1px}
-.objetivo-box{background:#fffbea;border:1.5px solid var(--y);border-radius:10px;padding:10px 14px;display:flex;gap:10px;align-items:flex-start;margin-top:10px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-/* Msg */
-.msg{padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:600;margin-bottom:12px}
-.msg-ok{background:#e8f5e9;color:#2E7D32;border:1px solid #a5d6a7}
-.msg-err{background:#ffebee;color:#C62828;border:1px solid #ef9a9a}
-/* Section label */
-.sec-lbl{font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-.page-title{font-size:20px;font-weight:800;color:var(--dark);margin-bottom:3px}
-.page-sub{font-size:12px;color:var(--gray);margin-bottom:16px}
-.inline-edit{cursor:pointer;border-bottom:1px dashed var(--y);color:var(--dark)}
-.inline-edit:hover{color:var(--yd)}
-/* Locked */
-.locked-bar{background:#fffde7;border:1px solid var(--y);border-radius:8px;padding:9px 14px;font-size:12px;color:#7B5E00;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.dot-status{width:8px;height:8px;border-radius:50%;display:inline-block}
-</style>
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.9.0/dist/tabler-icons.min.css" />
+  <!-- SheetJS for Excel export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<div class="app">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
 
-<!-- LOGIN SCREEN -->
-<div id="login-screen" style="position:absolute;inset:0;z-index:100;border-radius:12px;overflow:hidden">
-<div class="login-wrap">
-  <div class="login-left">
-    <div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
-        <div style="width:38px;height:38px;border-radius:9px;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#111">G</div>
-        <span style="font-size:20px;font-weight:900;color:#fff;letter-spacing:-0.5px">gobrax</span>
+<div class="app" id="app">
+
+  <!-- ===== LOGIN ===== -->
+  <div id="login-screen">
+    <div class="login-wrap">
+      <div class="login-left">
+        <div>
+          <div class="login-brand">
+            <div class="sb-icon">G</div>
+            <span class="login-brand-name">gobrax</span>
+          </div>
+          <div class="login-headline">KPIs<br>Semanais</div>
+          <p class="login-desc">Gestão e apresentação de indicadores por área.</p>
+        </div>
+        <div class="login-footer">© 2025 Gobrax</div>
       </div>
-      <div style="font-size:22px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px">KPIs<br>Semanais</div>
-      <div style="font-size:12px;color:#888;line-height:1.6">Gestão e apresentação de indicadores por área.</div>
-    </div>
-    <div style="font-size:10px;color:#555">© 2025 Gobrax</div>
-  </div>
-  <div class="login-right">
-    <div class="login-card">
-      <h2>Bem-vindo</h2>
-      <p style="font-size:12px;color:var(--gray);margin-bottom:18px">Entre com suas credenciais</p>
-      <div id="login-err" style="display:none" class="msg msg-err"></div>
-      <div class="fg"><label>E-mail</label><input id="le" type="email" placeholder="seu@gobrax.com.br"></div>
-      <div class="fg"><label>Senha</label><input id="lp" type="password" placeholder="••••••" value="123456"></div>
-      <button class="btn btn-y" style="width:100%;justify-content:center;padding:10px" onclick="doLogin()"><i class="ti ti-login" style="font-size:14px"></i> Entrar</button>
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--lgray)">
-        <div style="font-size:10px;color:var(--gray);margin-bottom:7px;text-align:center">Acesso rápido · senha: 123456</div>
-        <div class="quick-grid">
-          <button class="qbtn" onclick="ql('diretor@gobrax.com.br')">👑 Diretor</button>
-          <button class="qbtn" onclick="ql('grandescontas@gobrax.com.br')">🏢 Gd. Contas</button>
-          <button class="qbtn" onclick="ql('suprimentos@gobrax.com.br')">📦 Suprimentos</button>
-          <button class="qbtn" onclick="ql('suporte@gobrax.com.br')">🎧 Suporte</button>
-          <button class="qbtn" onclick="ql('cs@gobrax.com.br')">👥 CS</button>
-          <button class="qbtn" onclick="ql('melhoria@gobrax.com.br')">📈 Melhoria</button>
+
+      <div class="login-right">
+        <div class="login-card">
+          <h2>Bem-vindo</h2>
+          <p class="login-sub">Entre com suas credenciais</p>
+          <div id="login-err" class="msg msg-err" style="display:none"></div>
+          <div class="fg">
+            <label>E-mail</label>
+            <input id="le" type="email" placeholder="seu@gobrax.com.br" />
+          </div>
+          <div class="fg">
+            <label>Senha</label>
+            <input id="lp" type="password" placeholder="••••••" />
+          </div>
+          <button class="btn btn-y btn-full" onclick="doLogin()">
+            <i class="ti ti-login"></i> Entrar
+          </button>
+          <div class="quick-access">
+            <div class="quick-label">Acesso rápido · senha: 123456</div>
+            <div class="quick-grid">
+              <button class="qbtn" onclick="ql('diretor@gobrax.com.br')">👑 Diretor</button>
+              <button class="qbtn" onclick="ql('grandescontas@gobrax.com.br')">🏢 Gd. Contas</button>
+              <button class="qbtn" onclick="ql('suprimentos@gobrax.com.br')">📦 Suprimentos</button>
+              <button class="qbtn" onclick="ql('suporte@gobrax.com.br')">🎧 Suporte</button>
+              <button class="qbtn" onclick="ql('cs@gobrax.com.br')">👥 CS</button>
+              <button class="qbtn" onclick="ql('melhoria@gobrax.com.br')">📈 Melhoria</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- APP SCREEN -->
-<div id="app-screen" style="display:none;position:absolute;inset:0;display:none">
-<div class="app">
-  <div class="sb">
-    <div class="sb-logo">
-      <div class="sb-brand"><div class="sb-icon">G</div><div><div class="sb-name">gobrax</div><div class="sb-sub">KPIs Semanais</div></div></div>
-    </div>
-    <nav class="sb-nav" id="sb-nav"></nav>
-    <div class="sb-user">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <div class="sb-av" id="u-av">FD</div>
-        <div><div class="sb-uname" id="u-name">–</div><div class="sb-urole" id="u-role">–</div></div>
-      </div>
-      <button class="logout" onclick="doLogout()">← Sair</button>
-    </div>
-  </div>
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-left">
-        <span class="topbar-title" id="tb-title">Dashboard</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <select id="week-sel" onchange="CW=this.value;render()" style="font-size:12px;padding:5px 10px;border:1.5px solid var(--lgray);border-radius:8px;background:var(--white);color:var(--dark);font-weight:600"></select>
-        <button class="btn btn-y btn-sm" id="btn-kpis-week" onclick="nav('kpis-semanais')" style="display:none"><i class="ti ti-chart-bar" style="font-size:13px"></i> KPIs Semanais</button>
-      </div>
-    </div>
-    <div class="content" id="main-ct">
-      <div id="p-dashboard" class="page"></div>
-      <div id="p-kpis-semanais" class="page"></div>
-      <div id="p-fill" class="page"></div>
-      <div id="p-metas" class="page"></div>
-      <div id="p-history" class="page"></div>
-      <div id="p-users" class="page"></div>
-      <div id="p-areas" class="page"></div>
-      <div id="p-kpis-mgmt" class="page"></div>
-      <div id="p-detail" class="page"></div>
-      <div id="p-settings" class="page"></div>
-    </div>
-  </div>
-</div>
-</div>
+  <!-- ===== APP ===== -->
+  <div id="app-screen" style="display:none; position:absolute; inset:0;">
+    <div class="app-inner">
 
-<div id="modal-ct"></div>
-</div>
-
-<script>
-// ============ DATA ============
-let USERS=[
-  {id:'u1',name:'Felipe Diretor',email:'diretor@gobrax.com.br',pw:'123456',role:'super_admin',area:null,av:'FD'},
-  {id:'u2',name:'Ana Lima',email:'grandescontas@gobrax.com.br',pw:'123456',role:'manager',area:'a1',av:'AL'},
-  {id:'u3',name:'Carlos Souza',email:'suprimentos@gobrax.com.br',pw:'123456',role:'manager',area:'a2',av:'CS'},
-  {id:'u4',name:'Mariana Torres',email:'suporte@gobrax.com.br',pw:'123456',role:'manager',area:'a3',av:'MT'},
-  {id:'u5',name:'Ricardo Alves',email:'cs@gobrax.com.br',pw:'123456',role:'manager',area:'a4',av:'RA'},
-  {id:'u6',name:'Juliana Costa',email:'melhoria@gobrax.com.br',pw:'123456',role:'manager',area:'a5',av:'JC'},
-];
-let AREAS=[
-  {id:'a1',name:'Grandes Contas',n:1,icon:'🏢',color:'#F5C518'},
-  {id:'a2',name:'Suprimentos',n:2,icon:'📦',color:'#F5C518'},
-  {id:'a3',name:'Suporte',n:3,icon:'🎧',color:'#F5C518'},
-  {id:'a4',name:'CS',n:4,icon:'👥',color:'#F5C518'},
-  {id:'a5',name:'Melhoria Contínua',n:5,icon:'📈',color:'#F5C518'},
-];
-let KPIS=[
-  {id:'k1',area:'a1',name:'CHS',unit:'pts',type:'maior',active:true},
-  {id:'k2',area:'a1',name:'Clientes em prioridade CHS (< 60)',unit:'clientes',type:'menor',active:true},
-  {id:'k3',area:'a1',name:'SLA Grandes Contas',unit:'horas',type:'menor',active:true},
-  {id:'k4',area:'a1',name:'Clientes com premiação',unit:'clientes',type:'maior',active:true},
-  {id:'k5',area:'a1',name:'Prioridade HUB',unit:'clientes',type:'maior',active:true},
-  {id:'k6',area:'a2',name:'Unidades instaladas',unit:'un',type:'maior',active:true},
-  {id:'k7',area:'a2',name:'Envio de unidades',unit:'un',type:'maior',active:true},
-  {id:'k8',area:'a2',name:'Solicitações em separação',unit:'un',type:'menor',active:true},
-  {id:'k9',area:'a2',name:'Backlog de instalação',unit:'un',type:'menor',active:true},
-  {id:'k10',area:'a2',name:'Ressarcimentos',unit:'R$',type:'menor',active:true},
-  {id:'k11',area:'a3',name:'Tickets recebidos',unit:'tickets',type:'menor',active:true},
-  {id:'k12',area:'a3',name:'Tickets resolvidos',unit:'tickets',type:'maior',active:true},
-  {id:'k13',area:'a3',name:'SLA primeira resposta',unit:'%',type:'maior',active:true},
-  {id:'k14',area:'a3',name:'CSAT',unit:'nota',type:'maior',active:true},
-  {id:'k15',area:'a3',name:'Backlog vencidos',unit:'tickets',type:'menor',active:true},
-  {id:'k16',area:'a4',name:'Carteira ativa acompanhada',unit:'%',type:'maior',active:true},
-  {id:'k17',area:'a4',name:'Clientes em risco',unit:'clientes',type:'menor',active:true},
-  {id:'k18',area:'a4',name:'Churn forecast',unit:'clientes',type:'menor',active:true},
-  {id:'k19',area:'a4',name:'Reversões de risco',unit:'clientes',type:'maior',active:true},
-  {id:'k20',area:'a5',name:'Projetos em andamento',unit:'projetos',type:'maior',active:true},
-  {id:'k21',area:'a5',name:'Entregas no prazo',unit:'%',type:'maior',active:true},
-  {id:'k22',area:'a5',name:'Melhorias implantadas',unit:'melhorias',type:'maior',active:true},
-  {id:'k23',area:'a5',name:'Documentações concluídas',unit:'docs',type:'maior',active:true},
-];
-let WEEKS=[
-  {id:'w1',label:'Sem 02 · Jan/2025',start:'06/01',end:'10/01',status:'published',obj:'Iniciar o ano com foco em retenção e operação eficiente'},
-  {id:'w2',label:'Sem 03 · Jan/2025',start:'13/01',end:'17/01',status:'published',obj:'Acelerar instalações e reduzir backlog de suporte'},
-  {id:'w3',label:'Sem 04 · Jan/2025',start:'20/01',end:'24/01',status:'open',obj:'Consolidar ações de CS e avançar projetos de melhoria'},
-];
-// Results: RESULTS[weekId][areaId] = {status, kpis:{kpiId:{meta,realizado}}, foco, comentario, risco, plano, proximo}
-let RESULTS={
-  w2:{
-    a1:{status:'approved',foco:'Projeto Plano de Voo • ROI com Produto • agenda mensal de clientes estratégicos',comentario:'SLA levemente abaixo por volume atípico. Penalizações reduzidas.',risco:'Perda de contrato Empresa X',plano:'Reunião emergencial quarta-feira',proximo:'Follow-up pós-reunião',kpis:{k1:{meta:60,real:57},k2:{meta:40,real:48},k3:{meta:16,real:18.7},k4:{meta:25,real:21},k5:{meta:15,real:13}}},
-    a2:{status:'approved',foco:'QR code equipamentos • capacidade dos chips • nova transportadora • entregas fora de padrão',comentario:'Meta de instalações superada. Envios abaixo por atraso de fornecedor.',risco:'Atraso no fornecimento de chips',plano:'Ativação de fornecedor backup',proximo:'Normalização semana 04',kpis:{k6:{meta:400,real:412},k7:{meta:400,real:405},k8:{meta:50,real:42},k9:{meta:1500,real:3400},k10:{meta:3000,real:2800}}},
-    a3:{status:'approved',foco:'Separar por filas, criticidade e ofensores de SLA.',comentario:'Volume de tickets acima do esperado. CSAT excelente.',risco:'Pico de demanda segunda-feira',plano:'Escalada de nível 1 reforçada',proximo:'Análise de causa raiz',kpis:{k11:{meta:300,real:342},k12:{meta:300,real:318},k13:{meta:90,real:87},k14:{meta:4.5,real:4.7},k15:{meta:20,real:15}}},
-    a4:{status:'approved',foco:'Separar por Ongoing, Experiência e Grandes Contas.',comentario:'Cobertura de carteira acima da meta. Reversões superadas.',risco:'',plano:'Acompanhamento semanal dos clientes em risco',proximo:'Health check com 5 clientes críticos',kpis:{k16:{meta:85,real:89},k17:{meta:15,real:12},k18:{meta:8,real:6},k19:{meta:5,real:7}}},
-    a5:{status:'approved',foco:'Roadmap semanal • impacto x esforço • padronização.',comentario:'Projetos avançando. Documentação levemente abaixo.',risco:'Projeto de automação com escopo ampliado',plano:'Revisão de escopo com stakeholders',proximo:'Replanning até sexta-feira',kpis:{k20:{meta:8,real:9},k21:{meta:80,real:78},k22:{meta:4,real:5},k23:{meta:6,real:4}}},
-  },
-  w3:{
-    a1:{status:'pending_approval',foco:'QBR antecipado • proposta customizada Empresa Y',comentario:'Evolução positiva. Planos surtindo efeito.',risco:'Empresa Y ainda em acompanhamento',plano:'QBR antecipado Empresa Y',proximo:'Apresentação de valor dia 27',kpis:{k1:{meta:60,real:62},k2:{meta:40,real:38},k3:{meta:16,real:14},k4:{meta:25,real:24},k5:{meta:15,real:15}}},
-    a2:{status:'pending_approval',foco:'Normalização de envios • redução de backlog',comentario:'Instalações abaixo por absenteísmo. Envios normalizados.',risco:'Absenteísmo da equipe técnica',plano:'Contratação de freelancers',proximo:'Normalização semana 05',kpis:{k6:{meta:400,real:380},k7:{meta:400,real:410},k8:{meta:50,real:55},k9:{meta:1500,real:3800},k10:{meta:3000,real:2400}}},
-    a5:{status:'pending_approval',foco:'Conclusão de melhorias pendentes • publicação no confluence',comentario:'Entregas no prazo acima da meta. Meta de docs atingida.',risco:'',plano:'Aceleração das melhorias restantes',proximo:'Conclusão até 31/01',kpis:{k20:{meta:8,real:9},k21:{meta:80,real:85},k22:{meta:4,real:3},k23:{meta:6,real:6}}},
-  },
-};
-// METAS globais (super_admin pode definir)
-let METAS_GLOBAIS={
-  w3:{
-    a1:{k1:60,k2:40,k3:16,k4:25,k5:15},
-    a2:{k6:400,k7:400,k8:50,k9:1500,k10:3000},
-    a3:{k11:300,k12:300,k13:90,k14:4.5,k15:20},
-    a4:{k16:85,k17:15,k18:8,k19:5},
-    a5:{k20:8,k21:80,k22:4,k23:6},
-  }
-};
-
-let CU=null,CW='w3',CP='dashboard',detailId=null,detailWk=null;
-
-// ============ HELPERS ============
-function pct(meta,real,type){if(!meta||meta==0)return 0;return type==='maior'?Math.round((real/meta)*100):Math.round((meta/real)*100);}
-function st(meta,real,type){if(!meta)return'gray';if(type==='maior'){const p=pct(meta,real,type);return p>=100?'green':p>=80?'yellow':'red';}else{if(real<=meta)return'green';return((real-meta)/meta)*100<=20?'yellow':'red';}}
-function stColor(s){return s==='green'?'#2E7D32':s==='yellow'?'#F57F17':'#C62828';}
-function stBg(s){return s==='green'?'#e8f5e9':s==='yellow'?'#fffde7':'#ffebee';}
-function bdg(s){const m={approved:'b-green',pending_approval:'b-blue',pending:'b-gray',returned:'b-yellow',draft:'b-gray',green:'b-green',yellow:'b-yellow',red:'b-red','no-data':'b-gray',open:'b-blue',published:'b-green'};const l={approved:'✓ Aprovado',pending_approval:'⏳ Enviado',pending:'○ Pendente',returned:'↩ Devolvido',draft:'✎ Rascunho',green:'● Na meta',yellow:'● Atenção',red:'● Crítico','no-data':'— Sem dados',open:'Aberta',published:'Publicada'};return`<span class="badge ${m[s]||'b-gray'}">${l[s]||s}</span>`;}
-function getAreaSt(wid,aid){const r=(RESULTS[wid]||{})[aid];if(!r)return'pending';return r.status;}
-function getKpisSt(wid,aid){const r=(RESULTS[wid]||{})[aid];if(!r||!r.kpis)return'no-data';const ks=KPIS.filter(k=>k.area===aid&&k.active);const ss=ks.map(k=>{const v=r.kpis[k.id];if(!v)return null;return st(v.meta,v.real,k.type);}).filter(Boolean);if(!ss.length)return'no-data';if(ss.includes('red'))return'red';if(ss.includes('yellow'))return'yellow';return'green';}
-function getAvgPct(wid,aid){const r=(RESULTS[wid]||{})[aid];if(!r||!r.kpis)return 0;const ks=KPIS.filter(k=>k.area===aid&&k.active);const ps=ks.map(k=>{const v=r.kpis[k.id];if(!v)return null;return pct(v.meta,v.real,k.type);}).filter(v=>v!==null);if(!ps.length)return 0;return Math.round(ps.reduce((a,b)=>a+b,0)/ps.length);}
-function getMetaForKpi(wid,aid,kid){const mg=(METAS_GLOBAIS[wid]||{})[aid]||{};if(mg[kid]!==undefined)return mg[kid];const r=(RESULTS[wid]||{})[aid];if(r&&r.kpis&&r.kpis[kid])return r.kpis[kid].meta;return'';}
-function fmt(v){if(v===undefined||v===null||v==='')return'—';if(typeof v==='number'&&!Number.isInteger(v))return v.toFixed(1);return v;}
-
-// ============ AUTH ============
-function ql(e){document.getElementById('le').value=e;document.getElementById('lp').value='123456';}
-function doLogin(){
-  const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value;
-  const u=USERS.find(x=>x.email===e&&x.pw===p);
-  if(!u){const el=document.getElementById('login-err');el.textContent='Email ou senha incorretos.';el.style.display='block';return;}
-  CU=u;
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app-screen').style.display='block';
-  document.getElementById('u-av').textContent=u.av;
-  document.getElementById('u-name').textContent=u.name;
-  document.getElementById('u-role').textContent={super_admin:'Super Admin',manager:'Gerente',viewer:'Visualizador'}[u.role];
-  document.getElementById('btn-kpis-week').style.display=u.role==='super_admin'?'inline-flex':'none';
-  buildNav();buildWeekSel();nav('dashboard');
-}
-function doLogout(){CU=null;document.getElementById('login-screen').style.display='block';document.getElementById('app-screen').style.display='none';}
-
-function buildNav(){
-  const items=CU.role==='super_admin'?[
-    {id:'dashboard',i:'ti-layout-dashboard',l:'Dashboard'},
-    {id:'kpis-semanais',i:'ti-chart-bar',l:'KPIs Semanais'},
-    {id:'metas',i:'ti-target',l:'Definir Metas'},
-    {id:'history',i:'ti-history',l:'Histórico'},
-    ['Administração'],
-    {id:'users',i:'ti-users',l:'Usuários'},
-    {id:'areas',i:'ti-building',l:'Áreas'},
-    {id:'kpis-mgmt',i:'ti-adjustments',l:'KPIs'},
-    {id:'settings',i:'ti-settings',l:'Minha Conta'},
-  ]:CU.role==='manager'?[
-    {id:'dashboard',i:'ti-layout-dashboard',l:'Dashboard'},
-    {id:'fill',i:'ti-pencil',l:'Preencher Semana'},
-    {id:'kpis-semanais',i:'ti-chart-bar',l:'KPIs Semanais'},
-    {id:'history',i:'ti-history',l:'Histórico'},
-    {id:'settings',i:'ti-settings',l:'Minha Conta'},
-  ]:[
-    {id:'dashboard',i:'ti-layout-dashboard',l:'Dashboard'},
-    {id:'kpis-semanais',i:'ti-chart-bar',l:'KPIs Semanais'},
-    {id:'history',i:'ti-history',l:'Histórico'},
-    {id:'settings',i:'ti-settings',l:'Minha Conta'},
-  ];
-  document.getElementById('sb-nav').innerHTML=items.map(it=>{
-    if(Array.isArray(it))return`<div class="sb-section">${it[0]}</div>`;
-    return`<button class="nav-btn" id="nb-${it.id}" onclick="nav('${it.id}')"><i class="ti ${it.i}"></i>${it.l}</button>`;
-  }).join('');
-}
-function buildWeekSel(){
-  const s=document.getElementById('week-sel');
-  s.innerHTML=[...WEEKS].reverse().map(w=>`<option value="${w.id}">${w.label}</option>`).join('');
-  s.value=CW;
-}
-function nav(page,extra){
-  CP=page;if(extra)detailId=extra;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const pg=document.getElementById('p-'+page);if(pg)pg.classList.add('on');
-  const nb=document.getElementById('nb-'+page);if(nb)nb.classList.add('active');
-  const titles={dashboard:'Dashboard',fill:'Preencher Semana','kpis-semanais':'KPIs Semanais',metas:'Definir Metas',history:'Histórico',users:'Usuários',areas:'Áreas','kpis-mgmt':'Gerenciar KPIs',detail:'Detalhe da Área',settings:'Minha Conta'};
-  document.getElementById('tb-title').textContent=titles[page]||page;
-  render();
-}
-function render(){
-  if(CP==='dashboard')rdDashboard();
-  else if(CP==='kpis-semanais')rdKpisSemanais();
-  else if(CP==='fill')rdFill();
-  else if(CP==='metas')rdMetas();
-  else if(CP==='history')rdHistory();
-  else if(CP==='users')rdUsers();
-  else if(CP==='areas')rdAreas();
-  else if(CP==='kpis-mgmt')rdKpisMgmt();
-  else if(CP==='detail')rdDetail();
-  else if(CP==='settings')rdSettings();
-}
-
-// ============ DASHBOARD ============
-function rdDashboard(){
-  const isAdmin=CU.role==='super_admin';
-  const dAreas=isAdmin?AREAS:AREAS.filter(a=>a.id===CU.area);
-  const week=WEEKS.find(w=>w.id===CW);
-  const submitted=dAreas.filter(a=>getAreaSt(CW,a.id)!=='pending').length;
-  const approved=dAreas.filter(a=>getAreaSt(CW,a.id)==='approved').length;
-  const critical=dAreas.filter(a=>getKpisSt(CW,a.id)==='red').length;
-  const fp=dAreas.length?Math.round((submitted/dAreas.length)*100):0;
-  let h=`<div class="page-title">${isAdmin?'Dashboard Geral':`Dashboard — ${AREAS.find(a=>a.id===CU.area)?.name||''}`}</div>
-  <div class="page-sub">Visão consolidada dos KPIs semanais</div>`;
-  if(week){
-    h+=`<div class="card" style="margin-bottom:14px"><div class="card-p" style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
-      <div><div style="font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Semana</div><div style="font-size:13px;font-weight:800">${week.label}</div></div>
-      <div><div style="font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Período</div><div style="font-size:13px;font-weight:700">${week.start} – ${week.end}</div></div>
-      <div style="flex:1;min-width:160px"><div style="font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Objetivo da semana</div><div style="font-size:12px;color:#555">${week.obj}</div></div>
-      <div>${bdg(week.status)}</div>
-      ${isAdmin?`<button class="btn btn-y btn-sm" onclick="nav('metas')"><i class="ti ti-target" style="font-size:12px"></i> Definir Metas</button>`:''}
-    </div></div>`;
-  }
-  if(isAdmin){
-    h+=`<div class="stats-grid">
-      <div class="stat-box"><div class="stat-box-label">Áreas enviadas</div><div class="stat-box-val">${submitted}<span style="font-size:14px;color:var(--gray)">/${dAreas.length}</span></div></div>
-      <div class="stat-box"><div class="stat-box-label">Aprovadas</div><div class="stat-box-val" style="color:#2E7D32">${approved}</div></div>
-      <div class="stat-box"><div class="stat-box-label">Preenchimento</div><div class="stat-box-val" style="color:var(--yd)">${fp}%</div></div>
-      <div class="stat-box"><div class="stat-box-label">Áreas críticas</div><div class="stat-box-val" style="color:#C62828">${critical}</div></div>
-    </div>`;
-  }
-  if(!isAdmin){h+=`<div style="margin-bottom:14px"><button class="btn btn-y" onclick="nav('fill')"><i class="ti ti-pencil" style="font-size:14px"></i> Preencher Semana</button></div>`;}
-  h+=`<div class="sec-lbl">Status por área</div>`;
-  const row1=dAreas.slice(0,3).map(a=>dashAreaCard(a)).join('');
-  const row2=dAreas.slice(3).map(a=>dashAreaCard(a)).join('');
-  if(isAdmin){
-    h+=`<div class="grid-3">${row1}</div><div class="grid-2">${row2}</div>`;
-  }else{
-    h+=`<div style="max-width:380px">${dAreas.map(a=>dashAreaCard(a)).join('')}</div>`;
-  }
-  document.getElementById('p-dashboard').innerHTML=h;
-}
-function dashAreaCard(area){
-  const r=(RESULTS[CW]||{})[area.id];
-  const subSt=getAreaSt(CW,area.id);
-  const ovSt=getKpisSt(CW,area.id);
-  const avgP=getAvgPct(CW,area.id);
-  const isPend=subSt==='pending';
-  const ks=KPIS.filter(k=>k.area===area.id&&k.active);
-  const stColor_=isPend?'#ddd':stColor(ovSt);
-  let kpiRows='';
-  if(r&&r.kpis){
-    kpiRows=ks.slice(0,3).map(k=>{
-      const v=r.kpis[k.id];if(!v)return'';
-      const s=st(v.meta,v.real,k.type);
-      return`<div class="kpi-line"><span class="kpi-label">${k.name}</span><span class="kpi-value" style="color:${stColor(s)}">${fmt(v.real)} <span style="color:#bbb;font-weight:400">/ ${fmt(v.meta)}</span></span></div>`;
-    }).join('');
-  }
-  return`<div class="area-card" onclick="detailWk=CW;detailId='${area.id}';nav('detail')">
-    <div class="area-card-header" style="border-bottom-color:${stColor_}20">
-      <div class="area-icon-circle" style="background:${isPend?'#eee':'var(--y)'}"><span style="filter:${isPend?'grayscale(1)':''}">${area.icon}</span></div>
-      <div style="flex:1;min-width:0">
-        <div class="area-card-title">${area.n}. ${area.name}</div>
-        <div style="display:flex;align-items:center;gap:6px;margin-top:3px">${bdg(subSt)}${ovSt!=='no-data'?bdg(ovSt):''}</div>
-      </div>
-      ${!isPend?`<div style="text-align:right"><div style="font-size:22px;font-weight:900;color:${stColor(ovSt)}">${avgP}%</div><div style="font-size:10px;color:var(--gray)">atingimento</div></div>`:''}
-    </div>
-    ${!isPend?`<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${Math.min(100,avgP)}%;background:${stColor(ovSt)}"></div></div></div>`:''}
-    ${kpiRows||`<div style="padding:8px 0;font-size:12px;color:var(--gray);text-align:center">Aguardando preenchimento</div>`}
-    <div style="margin-top:10px;padding-top:8px;border-top:1px solid #f5f5f0;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:10.5px;color:var(--gray)">${isPend?'Não enviado':`${ks.length} KPIs`}</span>
-      <span style="font-size:11px;color:#1565C0;font-weight:600">Ver detalhes →</span>
-    </div>
-  </div>`;
-}
-
-// ============ KPIs SEMANAIS (One Page) ============
-function rdKpisSemanais(){
-  const week=WEEKS.find(w=>w.id===CW);
-  const submitted=AREAS.filter(a=>getAreaSt(CW,a.id)!=='pending').length;
-  const onT=AREAS.filter(a=>getKpisSt(CW,a.id)==='green').length;
-  const warn=AREAS.filter(a=>getKpisSt(CW,a.id)==='yellow').length;
-  const crit=AREAS.filter(a=>getKpisSt(CW,a.id)==='red').length;
-  let h=`<div class="kpis-header">
-    <div class="kpis-logo-row">
-      <div>
-        <div style="font-size:22px;font-weight:900;line-height:1">One Page | <span style="color:var(--yd)">KPIs Semanais</span></div>
-        <div style="font-size:11px;color:var(--gray);margin-top:3px">Pós-Vendas | Grandes Contas • Suprimentos • Suporte • CS • Melhoria Contínua</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-        <div style="text-align:right"><div style="font-size:20px;font-weight:900;color:var(--dark);letter-spacing:-1px">go<span style="color:var(--yd)">brax</span></div><div style="font-size:10px;color:var(--gray)">${week?.label||'—'} · ${week?.start}–${week?.end}</div></div>
-      </div>
-    </div>
-    <div class="objetivo-box">
-      <div style="width:32px;height:32px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🎯</div>
-      <div><span style="font-size:12.5px;font-weight:800;color:var(--yd)">Objetivo: </span><span style="font-size:12.5px;color:#555">${week?.obj||'—'}</span></div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-      <div class="badge b-gray">${submitted}/${AREAS.length} áreas enviadas</div>
-      ${onT?`<div class="badge b-green">✓ ${onT} na meta</div>`:''}
-      ${warn?`<div class="badge b-yellow">⚠ ${warn} atenção</div>`:''}
-      ${crit?`<div class="badge b-red">✕ ${crit} crítico</div>`:''}
-      <button class="btn btn-y btn-sm" style="margin-left:auto" onclick="alert('Use Ctrl+P → Salvar como PDF para exportar este relatório.')"><i class="ti ti-download" style="font-size:12px"></i> Exportar PDF</button>
-    </div>
-  </div>
-  <div class="grid-3">${AREAS.slice(0,3).map(a=>opCard(a)).join('')}</div>
-  <div class="grid-2">${AREAS.slice(3).map(a=>opCard(a)).join('')}</div>
-  <div style="margin-top:12px;padding:10px 0;border-top:1px solid var(--lgray);display:flex;justify-content:space-between;font-size:10.5px;color:var(--gray)">
-    <span>Gobrax · Gerado em ${new Date().toLocaleString('pt-BR')}</span><span>Uso interno — Confidencial</span>
-  </div>`;
-  document.getElementById('p-kpis-semanais').innerHTML=h;
-}
-function opCard(area){
-  const r=(RESULTS[CW]||{})[area.id];
-  const subSt=getAreaSt(CW,area.id);
-  const ovSt=getKpisSt(CW,area.id);
-  const avgP=getAvgPct(CW,area.id);
-  const isPend=subSt==='pending';
-  const ks=KPIS.filter(k=>k.area===area.id&&k.active);
-  const borderC=isPend?'var(--lgray)':ovSt==='green'?'#a5d6a7':ovSt==='yellow'?'#FFD54F':ovSt==='red'?'#ef9a9a':'var(--lgray)';
-  let kpiRows='';
-  if(r&&r.kpis){
-    kpiRows=ks.map(k=>{
-      const v=r.kpis[k.id];if(!v)return'';
-      const s=st(v.meta,v.real,k.type);
-      const p=pct(v.meta,v.real,k.type);
-      return`<div class="kpi-line">
-        <span class="kpi-label">${k.name}:</span>
-        <span class="kpi-value" style="color:${stColor(s)}">${fmt(v.real)} <span style="font-size:10px;color:#bbb">/ ${fmt(v.meta)}</span> <span style="font-size:10px;background:${stBg(s)};color:${stColor(s)};padding:1px 5px;border-radius:10px;font-weight:700">${p}%</span></span>
-      </div>`;
-    }).join('');
-  }
-  return`<div style="background:var(--white);border-radius:16px;border:2px solid ${borderC};overflow:hidden">
-    <div style="padding:14px 16px 10px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:38px;height:38px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:19px">${area.icon}</div>
-          <div><div style="font-size:15px;font-weight:800;color:var(--dark)">${area.n}. ${area.name}</div>${bdg(subSt)}</div>
+      <!-- Sidebar -->
+      <aside class="sb">
+        <div class="sb-logo">
+          <div class="sb-brand">
+            <div class="sb-icon">G</div>
+            <div>
+              <div class="sb-name">gobrax</div>
+              <div class="sb-sub">KPIs Semanais</div>
+            </div>
+          </div>
         </div>
-        ${!isPend?`<div style="text-align:right"><div style="font-size:20px;font-weight:900;color:${stColor(ovSt)}">${avgP}%</div><div style="font-size:9px;color:var(--gray)">atingimento</div></div>`:''}
-      </div>
-      ${!isPend?`<div class="prog-wrap" style="margin:4px 0 8px"><div class="prog-bar"><div class="prog-fill" style="width:${Math.min(100,avgP)}%;background:${stColor(ovSt)}"></div></div></div>`:''}
-      ${isPend?`<div style="padding:10px 0;text-align:center;font-size:12px;color:var(--gray)">Dados não enviados para esta semana</div>`:kpiRows}
-    </div>
-    ${r&&r.foco?`<div style="border-top:1px dashed var(--lgray);padding:10px 16px;display:flex;gap:8px;align-items:flex-start;background:#fffbea">
-      <span style="font-size:15px;flex-shrink:0">🎯</span>
-      <div><div style="font-size:10px;font-weight:700;color:var(--yd);margin-bottom:2px">Foco da semana:</div><div style="font-size:11.5px;color:#555;line-height:1.4">${r.foco}</div></div>
-    </div>`:''}
-  </div>`;
-}
-
-// ============ FILL ============
-function rdFill(){
-  if(CU.role!=='manager'){document.getElementById('p-fill').innerHTML=`<div class="page-title">Acesso restrito</div><p style="color:var(--gray)">Apenas gerentes podem preencher KPIs.</p>`;return;}
-  const aid=CU.area;const area=AREAS.find(a=>a.id===aid);
-  const ks=KPIS.filter(k=>k.area===aid&&k.active);
-  const week=WEEKS.find(w=>w.id===CW);
-  const r=(RESULTS[CW]||{})[aid];
-  const isLocked=r&&r.status==='approved';
-  const isPendApproval=r&&r.status==='pending_approval';
-  let h=`<div class="page-title">Preencher Semana</div><div class="page-sub">${area?.name||''}</div>`;
-  h+=`<div class="card" style="margin-bottom:14px"><div class="card-p" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
-    <div><div style="font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Semana</div><div style="font-size:13px;font-weight:800">${week?.label}</div></div>
-    <div><div style="font-size:10px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Período</div><div style="font-size:12px;font-weight:700">${week?.start} – ${week?.end}</div></div>
-    <div style="margin-left:auto;display:flex;gap:8px">${bdg(week?.status)}${r?bdg(r.status):''}</div>
-  </div></div>`;
-  if(isLocked)h+=`<div class="locked-bar">🔒 Semana aprovada. Não é possível editar.</div>`;
-  if(isPendApproval)h+=`<div class="locked-bar">⏳ Aguardando aprovação do Diretor. Para editar, solicite devolução.</div>`;
-  h+=`<div id="fill-msg"></div>`;
-  h+=`<div class="card" style="margin-bottom:14px"><div class="card-p">
-    <div style="font-size:13px;font-weight:800;margin-bottom:12px;color:var(--dark)">KPIs da semana</div>`;
-  ks.forEach(k=>{
-    const meta=getMetaForKpi(CW,aid,k.id);
-    const v=r?.kpis?.[k.id];
-    const realVal=v?.real??'';
-    h+=`<div style="background:#fafaf8;border-radius:10px;padding:12px;margin-bottom:8px">
-      <div style="font-size:13px;font-weight:700;margin-bottom:2px">${k.name}</div>
-      <div style="font-size:10.5px;color:var(--gray);margin-bottom:8px">${k.type==='maior'?'↑ quanto maior melhor':'↓ quanto menor melhor'} · Unidade: ${k.unit}${meta!==''?` · Meta definida: <strong style="color:var(--yd)">${meta}</strong>`:' · <span style="color:#C62828">Meta não definida pelo Diretor</span>'}</div>
-      <div class="two-col">
-        <div class="fg" style="margin:0"><label>Meta</label><input type="number" id="t_${k.id}" value="${meta}" step="any" ${isLocked||isPendApproval?'disabled':''}></div>
-        <div class="fg" style="margin:0"><label>Realizado</label><input type="number" id="a_${k.id}" value="${realVal}" step="any" oninput="calcKpiPreview('${k.id}','${k.type}')" ${isLocked||isPendApproval?'disabled':''}></div>
-      </div>
-      <div id="kc_${k.id}" style="margin-top:6px"></div>
-    </div>`;
-  });
-  h+=`</div></div>`;
-  h+=`<div class="card" style="margin-bottom:14px"><div class="card-p">
-    <div style="font-size:13px;font-weight:800;margin-bottom:12px">Análise qualitativa</div>
-    <div class="fg"><label>Foco da semana</label><input id="f-foco" value="${r?.foco||''}" placeholder="Principais iniciativas e projetos da semana..." ${isLocked||isPendApproval?'disabled':''}></div>
-    <div class="fg"><label>Comentário executivo</label><textarea id="f-com" ${isLocked||isPendApproval?'disabled':''}>${r?.comentario||''}</textarea></div>
-    <div class="fg"><label>Riscos</label><textarea id="f-risco" rows="2" ${isLocked||isPendApproval?'disabled':''}>${r?.risco||''}</textarea></div>
-    <div class="fg"><label>Plano de ação</label><textarea id="f-plano" rows="2" ${isLocked||isPendApproval?'disabled':''}>${r?.plano||''}</textarea></div>
-    <div class="fg"><label>Próximos passos</label><textarea id="f-prox" rows="2" ${isLocked||isPendApproval?'disabled':''}>${r?.proximo||''}</textarea></div>
-  </div></div>`;
-  if(!isLocked&&!isPendApproval){
-    h+=`<div class="card"><div class="card-p" style="display:flex;align-items:center;justify-content:space-between">
-      <button class="btn btn-ghost" onclick="nav('dashboard')">Cancelar</button>
-      <div style="display:flex;gap:8px">
-        <button class="btn" onclick="saveFill(true)"><i class="ti ti-device-floppy" style="font-size:13px"></i> Salvar rascunho</button>
-        <button class="btn btn-y" onclick="saveFill(false)"><i class="ti ti-send" style="font-size:13px"></i> Enviar semana</button>
-      </div>
-    </div></div>`;
-  }
-  document.getElementById('p-fill').innerHTML=h;
-  ks.forEach(k=>{if(r?.kpis?.[k.id])calcKpiPreview(k.id,k.type);});
-}
-function calcKpiPreview(kid,type){
-  const t=parseFloat(document.getElementById('t_'+kid)?.value);
-  const a=parseFloat(document.getElementById('a_'+kid)?.value);
-  const el=document.getElementById('kc_'+kid);if(!el)return;
-  if(isNaN(t)||isNaN(a)||!t){el.innerHTML='';return;}
-  const p=pct(t,a,type);const s=st(t,a,type);
-  el.innerHTML=`<div style="display:flex;align-items:center;gap:8px">
-    <div class="prog-bar" style="flex:1"><div class="prog-fill" style="width:${Math.min(100,p)}%;background:${stColor(s)}"></div></div>
-    <span style="font-size:12px;font-weight:800;color:${stColor(s)}">${p}%</span>${bdg(s)}
-  </div>`;
-}
-function saveFill(isDraft){
-  const aid=CU.area;const ks=KPIS.filter(k=>k.area===aid&&k.active);
-  const kpis={};let has=false;
-  ks.forEach(k=>{
-    const t=parseFloat(document.getElementById('t_'+k.id)?.value);
-    const a=parseFloat(document.getElementById('a_'+k.id)?.value);
-    if(!isNaN(t)&&!isNaN(a)){kpis[k.id]={meta:t,real:a};has=true;}
-  });
-  if(!has){showMsg('fill-msg','err','Preencha ao menos um KPI antes de enviar.');return;}
-  if(!RESULTS[CW])RESULTS[CW]={};
-  RESULTS[CW][aid]={
-    status:isDraft?'draft':'pending_approval',
-    foco:document.getElementById('f-foco')?.value||'',
-    comentario:document.getElementById('f-com')?.value||'',
-    risco:document.getElementById('f-risco')?.value||'',
-    plano:document.getElementById('f-plano')?.value||'',
-    proximo:document.getElementById('f-prox')?.value||'',
-    kpis,
-  };
-  showMsg('fill-msg','ok',isDraft?'Rascunho salvo!':'Semana enviada com sucesso! Dashboard atualizado.');
-  if(!isDraft)setTimeout(()=>rdFill(),1500);
-}
-function showMsg(id,type,txt){const el=document.getElementById(id);if(el){el.innerHTML=`<div class="msg msg-${type==='ok'?'ok':'err'}">${txt}</div>`;setTimeout(()=>{if(el)el.innerHTML='';},4000);}}
-
-// ============ METAS ============
-function rdMetas(){
-  if(CU.role!=='super_admin'){document.getElementById('p-metas').innerHTML='<p>Acesso restrito.</p>';return;}
-  const week=WEEKS.find(w=>w.id===CW);
-  let h=`<div class="page-title">Definir Metas</div><div class="page-sub">Configure as metas semanais para cada área · ${week?.label}</div>
-  <div id="metas-msg"></div>`;
-  AREAS.forEach(area=>{
-    const ks=KPIS.filter(k=>k.area===area.id&&k.active);
-    const mg=(METAS_GLOBAIS[CW]||{})[area.id]||{};
-    h+=`<div class="card" style="margin-bottom:14px"><div class="card-p">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--lgray)">
-        <div style="width:34px;height:34px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:16px">${area.icon}</div>
-        <div style="font-size:15px;font-weight:800">${area.n}. ${area.name}</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">`;
-    ks.forEach(k=>{
-      h+=`<div style="background:#fafaf8;border-radius:8px;padding:10px">
-        <div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px">${k.name} <span style="font-weight:400;color:#bbb">(${k.unit})</span></div>
-        <div style="font-size:9.5px;color:var(--gray);margin-bottom:4px">${k.type==='maior'?'↑ maior melhor':'↓ menor melhor'}</div>
-        <input type="number" id="mg_${CW}_${area.id}_${k.id}" value="${mg[k.id]??''}" step="any" placeholder="Meta..." style="width:100%;padding:6px 8px;border:1.5px solid var(--lgray);border-radius:6px;font-size:13px;font-weight:700;color:var(--yd)">
-      </div>`;
-    });
-    h+=`</div></div></div>`;
-  });
-  h+=`<button class="btn btn-y" style="margin-bottom:20px" onclick="saveMetas()"><i class="ti ti-check" style="font-size:14px"></i> Salvar todas as metas</button>`;
-  document.getElementById('p-metas').innerHTML=h;
-}
-function saveMetas(){
-  if(!METAS_GLOBAIS[CW])METAS_GLOBAIS[CW]={};
-  AREAS.forEach(area=>{
-    if(!METAS_GLOBAIS[CW][area.id])METAS_GLOBAIS[CW][area.id]={};
-    KPIS.filter(k=>k.area===area.id&&k.active).forEach(k=>{
-      const v=parseFloat(document.getElementById(`mg_${CW}_${area.id}_${k.id}`)?.value);
-      if(!isNaN(v))METAS_GLOBAIS[CW][area.id][k.id]=v;
-    });
-  });
-  showMsg('metas-msg','ok','Metas salvas com sucesso! Gerentes agora veem as metas ao preencher.');
-}
-
-// ============ DETAIL ============
-function rdDetail(){
-  const area=AREAS.find(a=>a.id===detailId);
-  const wk=detailWk||CW;
-  const r=(RESULTS[wk]||{})[detailId];
-  const subSt=getAreaSt(wk,detailId);
-  const ovSt=getKpisSt(wk,detailId);
-  const avgP=getAvgPct(wk,detailId);
-  const ks=KPIS.filter(k=>k.area===detailId&&k.active);
-  const submitter=USERS.find(u=>u.id===r?.submittedBy);
-  const isAdmin=CU.role==='super_admin';
-  if(!area){document.getElementById('p-detail').innerHTML='<p>Área não encontrada.</p>';return;}
-  let h=`<div style="margin-bottom:12px"><button class="btn btn-ghost btn-sm" onclick="nav('dashboard')"><i class="ti ti-arrow-left" style="font-size:12px"></i> Voltar</button></div>`;
-  h+=`<div class="card" style="margin-bottom:14px"><div style="height:4px;background:var(--y)"></div><div class="card-p">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-      <div style="display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:24px">${area.icon}</div>
-        <div><div style="font-size:20px;font-weight:900">${area.n}. ${area.name}</div>
-        <div style="display:flex;gap:6px;margin-top:4px">${bdg(subSt)}${ovSt!=='no-data'?bdg(ovSt):''}</div></div>
-      </div>
-      <div style="text-align:right"><div style="font-size:30px;font-weight:900;color:${stColor(ovSt)}">${avgP>0?avgP+'%':'—'}</div><div style="font-size:10px;color:var(--gray)">atingimento médio</div></div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px">
-      <select onchange="detailWk=this.value;rdDetail()" style="font-size:12px;padding:5px 10px;border:1.5px solid var(--lgray);border-radius:8px;background:var(--white);font-weight:600">
-        ${[...WEEKS].reverse().map(w=>`<option value="${w.id}"${w.id===wk?' selected':''}>${w.label}</option>`).join('')}
-      </select>
-      ${isAdmin&&subSt==='pending_approval'?`<div style="display:flex;gap:8px">
-        <button class="btn btn-sm btn-red" onclick="approveArea('returned')"><i class="ti ti-arrow-back-up" style="font-size:12px"></i> Devolver</button>
-        <button class="btn btn-y btn-sm" onclick="approveArea('approved')"><i class="ti ti-check" style="font-size:12px"></i> Aprovar</button>
-      </div>`:''}
-    </div>
-  </div></div>`;
-  if(r&&r.kpis){
-    h+=`<div class="card" style="margin-bottom:14px"><div class="card-p">
-      <div style="font-size:13px;font-weight:800;margin-bottom:12px">KPIs da semana</div>`;
-    ks.forEach(k=>{
-      const v=r.kpis[k.id];if(!v)return;
-      const p=pct(v.meta,v.real,k.type);const s=st(v.meta,v.real,k.type);
-      h+=`<div style="border:1.5px solid var(--lgray);border-radius:10px;padding:12px;margin-bottom:8px">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
-          <div><div style="font-size:13px;font-weight:700">${k.name}</div>
-          <div style="font-size:10.5px;color:var(--gray)">${k.type==='maior'?'↑ maior melhor':'↓ menor melhor'} · ${k.unit}</div></div>
-          <span style="font-size:14px;font-weight:900;color:${stColor(s)}">${p}%</span>
+        <nav class="sb-nav" id="sb-nav"></nav>
+        <div class="sb-user">
+          <div class="sb-user-row">
+            <div class="sb-av" id="u-av">--</div>
+            <div>
+              <div class="sb-uname" id="u-name">–</div>
+              <div class="sb-urole" id="u-role">–</div>
+            </div>
+          </div>
+          <button class="logout" onclick="doLogout()">← Sair</button>
         </div>
-        <div style="display:flex;gap:14px;font-size:12px;margin-bottom:8px">
-          <span><span style="color:var(--gray)">Meta: </span><strong>${fmt(v.meta)}</strong></span>
-          <span><span style="color:var(--gray)">Realizado: </span><strong style="color:${stColor(s)}">${fmt(v.real)}</strong></span>
-          ${bdg(s)}
+      </aside>
+
+      <!-- Main content -->
+      <div class="main">
+        <div class="topbar">
+          <div class="topbar-left">
+            <span class="topbar-title" id="tb-title">Dashboard</span>
+          </div>
+          <div class="topbar-right">
+            <select id="week-sel" onchange="CW=this.value;render()"></select>
+            <button class="btn btn-y btn-sm" id="btn-kpis-week" onclick="nav('kpis-semanais')" style="display:none">
+              <i class="ti ti-chart-bar"></i> KPIs Semanais
+            </button>
+            <button class="btn btn-sm no-print" id="btn-export-excel" onclick="exportExcel()" style="display:none" title="Exportar Excel">
+              <i class="ti ti-table-export"></i>
+            </button>
+          </div>
         </div>
-        <div class="prog-bar"><div class="prog-fill" style="width:${Math.min(100,p)}%;background:${stColor(s)}"></div></div>
-      </div>`;
-    });
-    h+=`</div></div>`;
-  }else{
-    h+=`<div class="card" style="margin-bottom:14px"><div class="card-p" style="text-align:center;padding:30px;color:var(--gray)">Nenhum dado enviado para esta semana</div></div>`;
-  }
-  if(r&&(r.comentario||r.risco||r.plano||r.proximo)){
-    h+=`<div class="card" style="margin-bottom:14px"><div class="card-p"><div style="font-size:13px;font-weight:800;margin-bottom:12px">Análise qualitativa</div>`;
-    if(r.foco)h+=`<div style="background:#fffbea;border-radius:8px;border:1px dashed var(--y);padding:10px 12px;margin-bottom:10px;display:flex;gap:8px"><span style="font-size:16px">🎯</span><div><div style="font-size:11px;font-weight:700;color:var(--yd)">Foco da semana</div><div style="font-size:12.5px;color:#555;line-height:1.4;margin-top:2px">${r.foco}</div></div></div>`;
-    [['comentario','💬 Comentário executivo'],['risco','⚠️ Riscos'],['plano','🔧 Plano de ação'],['proximo','→ Próximos passos']].forEach(([f,l])=>{
-      if(r[f])h+=`<div style="margin-bottom:10px"><div style="font-size:10.5px;font-weight:700;color:var(--gray);margin-bottom:3px">${l}</div><p style="font-size:13px;color:var(--dark);line-height:1.5">${r[f]}</p></div>`;
-    });
-    h+=`</div></div>`;
-  }
-  document.getElementById('p-detail').innerHTML=h;
-}
-function approveArea(action){
-  openModal(action==='approved'?'✅ Aprovar envio':'↩ Devolver para revisão',
-    `<p style="font-size:13px;margin-bottom:14px">${action==='approved'?'Confirmar aprovação dos dados de':'Devolver dados de'} <strong>${AREAS.find(a=>a.id===detailId)?.name}</strong>?</p>
-    <div class="fg"><label>Comentário (opcional)</label><textarea id="apv-cmt" placeholder="Deixe um comentário ao gerente..."></textarea></div>`,
-    [{l:action==='approved'?'Aprovar':'Devolver',y:true,fn:()=>{
-      if(!RESULTS[detailWk||CW])RESULTS[detailWk||CW]={};
-      if(!RESULTS[detailWk||CW][detailId])RESULTS[detailWk||CW][detailId]={kpis:{}};
-      RESULTS[detailWk||CW][detailId].status=action;
-      closeModal();rdDetail();
-    }},{l:'Cancelar',fn:closeModal}]
-  );
-}
 
-// ============ HISTORY ============
-function rdHistory(){
-  const dA=CU.role==='super_admin'?AREAS:AREAS.filter(a=>a.id===CU.area);
-  let h=`<div class="page-title">Histórico de Relatórios</div><div class="page-sub">Todos os relatórios semanais</div>`;
-  [...WEEKS].reverse().forEach(w=>{
-    const sub=dA.filter(a=>getAreaSt(w.id,a.id)!=='pending').length;
-    h+=`<div class="card" style="margin-bottom:12px"><div style="padding:12px 16px;border-bottom:1px solid var(--lgray);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div><div style="font-size:13px;font-weight:800">${w.label}</div><div style="font-size:11px;color:var(--gray)">${w.start} – ${w.end} · ${w.obj}</div></div>
-      <div style="display:flex;align-items:center;gap:8px">${bdg(w.status)}<span style="font-size:11px;color:var(--gray)">${sub}/${dA.length} enviadas</span>
-      <button class="btn btn-sm btn-y" onclick="CW='${w.id}';document.getElementById('week-sel').value='${w.id}';nav('kpis-semanais')">Ver KPIs</button></div>
-    </div>
-    <div style="padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap">
-    ${dA.map(a=>{
-      const s=getAreaSt(w.id,a.id);const ks=getKpisSt(w.id,a.id);
-      return`<div onclick="detailWk='${w.id}';detailId='${a.id}';nav('detail')" style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border:1.5px solid var(--lgray);cursor:pointer;font-size:12px;font-weight:600;transition:.15s" onmouseover="this.style.borderColor='var(--y)'" onmouseout="this.style.borderColor='var(--lgray)'">${a.icon} ${a.name} ${bdg(s)}${ks!=='no-data'?`<span class="dot-status" style="background:${stColor(ks)}"></span>`:''}</div>`;
-    }).join('')}
-    </div></div>`;
-  });
-  document.getElementById('p-history').innerHTML=h;
-}
-
-// ============ USERS ============
-function rdUsers(){
-  let h=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-    <div><div class="page-title">Usuários</div><div class="page-sub">Gerencie acessos ao sistema</div></div>
-    <button class="btn btn-y" onclick="openNewUser()"><i class="ti ti-plus" style="font-size:14px"></i> Novo usuário</button>
-  </div>
-  <div class="tbl-wrap"><table><thead><tr><th>Usuário</th><th>Perfil</th><th>Área</th><th>E-mail</th><th style="text-align:right">Ações</th></tr></thead><tbody>`;
-  const rl={super_admin:'Super Admin',manager:'Gerente',viewer:'Visualizador'};
-  USERS.forEach(u=>{
-    const a=AREAS.find(x=>x.id===u.area);
-    h+=`<tr>
-      <td><div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">${u.av}</div><div style="font-weight:700">${u.name}</div></div></td>
-      <td>${rl[u.role]||u.role}</td><td>${a?a.icon+' '+a.name:'—'}</td><td style="color:var(--gray)">${u.email}</td>
-      <td style="text-align:right"><div style="display:flex;gap:6px;justify-content:flex-end">
-        <button class="btn btn-sm" onclick="openEditUser('${u.id}')"><i class="ti ti-edit" style="font-size:12px"></i> Editar</button>
-        <button class="btn btn-sm btn-red" onclick="openChangePw('${u.id}')"><i class="ti ti-key" style="font-size:12px"></i> Senha</button>
-      </div></td>
-    </tr>`;
-  });
-  h+=`</tbody></table></div>`;
-  document.getElementById('p-users').innerHTML=h;
-}
-function openNewUser(){
-  openModal('Novo usuário',`
-    <div class="two-col"><div class="fg"><label>Nome completo</label><input id="nu-n" type="text"></div><div class="fg"><label>Avatar (2 letras)</label><input id="nu-av" type="text" maxlength="2" placeholder="AL"></div></div>
-    <div class="fg"><label>E-mail</label><input id="nu-e" type="email"></div>
-    <div class="fg"><label>Senha</label><input id="nu-p" type="password" value="123456"></div>
-    <div class="two-col">
-      <div class="fg"><label>Perfil</label><select id="nu-r"><option value="manager">Gerente</option><option value="super_admin">Super Admin</option><option value="viewer">Visualizador</option></select></div>
-      <div class="fg"><label>Área</label><select id="nu-a"><option value="">— Sem área —</option>${AREAS.map(a=>`<option value="${a.id}">${a.name}</option>`).join('')}</select></div>
-    </div>
-  `,[{l:'Criar usuário',y:true,fn:()=>{
-    const n=document.getElementById('nu-n').value.trim();
-    if(!n){alert('Informe o nome.');return;}
-    const av=document.getElementById('nu-av').value.trim()||n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    USERS.push({id:'u'+Date.now(),name:n,email:document.getElementById('nu-e').value,pw:document.getElementById('nu-p').value||'123456',role:document.getElementById('nu-r').value,area:document.getElementById('nu-a').value||null,av});
-    closeModal();rdUsers();
-  }},{l:'Cancelar',fn:closeModal}]);
-}
-function openEditUser(uid){
-  const u=USERS.find(x=>x.id===uid);if(!u)return;
-  openModal('Editar usuário',`
-    <div class="two-col"><div class="fg"><label>Nome</label><input id="eu-n" value="${u.name}"></div><div class="fg"><label>Avatar</label><input id="eu-av" value="${u.av}" maxlength="2"></div></div>
-    <div class="fg"><label>E-mail</label><input id="eu-e" type="email" value="${u.email}"></div>
-    <div class="two-col">
-      <div class="fg"><label>Perfil</label><select id="eu-r"><option value="manager"${u.role==='manager'?' selected':''}>Gerente</option><option value="super_admin"${u.role==='super_admin'?' selected':''}>Super Admin</option><option value="viewer"${u.role==='viewer'?' selected':''}>Visualizador</option></select></div>
-      <div class="fg"><label>Área</label><select id="eu-a"><option value="">— Sem área —</option>${AREAS.map(a=>`<option value="${a.id}"${a.id===u.area?' selected':''}>${a.name}</option>`).join('')}</select></div>
-    </div>
-  `,[{l:'Salvar',y:true,fn:()=>{
-    u.name=document.getElementById('eu-n').value;
-    u.av=document.getElementById('eu-av').value||u.name.slice(0,2).toUpperCase();
-    u.email=document.getElementById('eu-e').value;
-    u.role=document.getElementById('eu-r').value;
-    u.area=document.getElementById('eu-a').value||null;
-    if(u.id===CU.id){CU=u;document.getElementById('u-av').textContent=u.av;document.getElementById('u-name').textContent=u.name;}
-    closeModal();rdUsers();
-  }},{l:'Cancelar',fn:closeModal}]);
-}
-function openChangePw(uid){
-  const u=USERS.find(x=>x.id===uid);if(!u)return;
-  openModal(`Alterar senha — ${u.name}`,`
-    <div class="fg"><label>Nova senha</label><input id="np" type="password" placeholder="Nova senha..."></div>
-    <div class="fg"><label>Confirmar senha</label><input id="cp" type="password" placeholder="Confirme a senha..."></div>
-  `,[{l:'Alterar senha',y:true,fn:()=>{
-    const np=document.getElementById('np').value;const cp=document.getElementById('cp').value;
-    if(!np){alert('Informe a nova senha.');return;}
-    if(np!==cp){alert('Senhas não conferem.');return;}
-    u.pw=np;closeModal();alert('Senha alterada com sucesso!');
-  }},{l:'Cancelar',fn:closeModal}]);
-}
-
-// ============ AREAS ============
-function rdAreas(){
-  let h=`<div class="page-title" style="margin-bottom:3px">Áreas</div><div class="page-sub">Gerencie as áreas do sistema</div>
-  <div class="grid-3">`;
-  AREAS.forEach(area=>{
-    const mgr=USERS.find(u=>u.id===USERS.find(x=>x.area===area.id&&x.role==='manager')?.id);
-    const areaUsers=USERS.filter(u=>u.area===area.id);
-    h+=`<div class="card"><div style="height:4px;background:var(--y)"></div><div class="card-p">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:38px;height:38px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:19px">${area.icon}</div>
-          <div><div style="font-size:15px;font-weight:800">${area.n}. ${area.name}</div></div>
+        <div class="content" id="main-ct">
+          <div id="p-dashboard"    class="page"></div>
+          <div id="p-kpis-semanais" class="page"></div>
+          <div id="p-fill"         class="page"></div>
+          <div id="p-metas"        class="page"></div>
+          <div id="p-history"      class="page"></div>
+          <div id="p-users"        class="page"></div>
+          <div id="p-areas"        class="page"></div>
+          <div id="p-kpis-mgmt"    class="page"></div>
+          <div id="p-detail"       class="page"></div>
+          <div id="p-settings"     class="page"></div>
         </div>
-        <button class="btn btn-sm" onclick="openEditArea('${area.id}')"><i class="ti ti-edit" style="font-size:12px"></i></button>
       </div>
-      <div style="font-size:12px;color:var(--gray)">
-        <div style="margin-bottom:4px"><span style="font-weight:700">Gerente: </span>${areaUsers.find(u=>u.role==='manager')?.name||'—'}</div>
-        <div><span style="font-weight:700">Usuários: </span>${areaUsers.length}</div>
-      </div>
-    </div></div>`;
-  });
-  h+=`</div>`;
-  document.getElementById('p-areas').innerHTML=h;
-}
-function openEditArea(aid){
-  const a=AREAS.find(x=>x.id===aid);if(!a)return;
-  const mgrs=USERS.filter(u=>u.role==='manager');
-  openModal(`Editar — ${a.name}`,`
-    <div class="fg"><label>Nome da área</label><input id="ea-n" value="${a.name}"></div>
-    <div class="fg"><label>Ícone (emoji)</label><input id="ea-ic" value="${a.icon}" style="font-size:20px;width:80px"></div>
-    <div class="fg"><label>Gerente responsável</label><select id="ea-m"><option value="">— Selecionar —</option>${mgrs.map(u=>`<option value="${u.id}"${USERS.find(x=>x.area===aid&&x.role==='manager')?.id===u.id?' selected':''}>${u.name}</option>`).join('')}</select></div>
-  `,[{l:'Salvar',y:true,fn:()=>{
-    a.name=document.getElementById('ea-n').value;
-    a.icon=document.getElementById('ea-ic').value;
-    const newMgr=document.getElementById('ea-m').value;
-    USERS.forEach(u=>{if(u.area===aid&&u.role==='manager')u.area=null;});
-    if(newMgr){const u=USERS.find(x=>x.id===newMgr);if(u)u.area=aid;}
-    closeModal();rdAreas();
-  }},{l:'Cancelar',fn:closeModal}]);
-}
 
-// ============ KPIs MGMT ============
-function rdKpisMgmt(){
-  let h=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-    <div><div class="page-title">Gerenciar KPIs</div><div class="page-sub">Indicadores de cada área</div></div>
-    <button class="btn btn-y" onclick="openNewKpi()"><i class="ti ti-plus" style="font-size:14px"></i> Novo KPI</button>
-  </div>`;
-  AREAS.forEach(area=>{
-    const ks=KPIS.filter(k=>k.area===area.id);
-    h+=`<div style="margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">${area.icon}</span><div style="font-size:13px;font-weight:800">${area.n}. ${area.name}</div>
-        <span class="badge b-gray">${ks.filter(k=>k.active).length} ativos</span>
-      </div>
-      <div class="tbl-wrap"><table><thead><tr><th>KPI</th><th>Unidade</th><th>Tipo</th><th>Status</th><th style="text-align:right">Ações</th></tr></thead><tbody>`;
-    ks.forEach(k=>{
-      h+=`<tr><td style="font-weight:600">${k.name}</td><td style="color:var(--gray)">${k.unit}</td>
-        <td><span class="badge ${k.type==='maior'?'b-blue':'b-yellow'}">${k.type==='maior'?'↑ maior melhor':'↓ menor melhor'}</span></td>
-        <td><span class="badge ${k.active?'b-green':'b-gray'}">${k.active?'Ativo':'Inativo'}</span></td>
-        <td style="text-align:right"><div style="display:flex;gap:5px;justify-content:flex-end">
-          <button class="btn btn-sm" onclick="openEditKpi('${k.id}')"><i class="ti ti-edit" style="font-size:11px"></i> Editar</button>
-          <button class="btn btn-sm ${k.active?'btn-red':''}" onclick="toggleKpi('${k.id}')">${k.active?'Desativar':'Ativar'}</button>
-        </div></td></tr>`;
-    });
-    h+=`</tbody></table></div></div>`;
-  });
-  document.getElementById('p-kpis-mgmt').innerHTML=h;
-}
-function openNewKpi(){
-  openModal('Novo KPI',`
-    <div class="fg"><label>Área</label><select id="nk-a"><option value="">— Selecionar —</option>${AREAS.map(a=>`<option value="${a.id}">${a.n}. ${a.name}</option>`).join('')}</select></div>
-    <div class="fg"><label>Nome do KPI</label><input id="nk-n" placeholder="Ex: SLA de atendimento (%)"></div>
-    <div class="two-col"><div class="fg"><label>Unidade</label><input id="nk-u" placeholder="%"></div>
-    <div class="fg"><label>Tipo</label><select id="nk-t"><option value="maior">↑ Quanto maior melhor</option><option value="menor">↓ Quanto menor melhor</option></select></div></div>
-  `,[{l:'Criar KPI',y:true,fn:()=>{
-    const a=document.getElementById('nk-a').value,n=document.getElementById('nk-n').value;
-    if(!a||!n){alert('Preencha área e nome.');return;}
-    KPIS.push({id:'k'+Date.now(),area:a,name:n,unit:document.getElementById('nk-u').value||'un',type:document.getElementById('nk-t').value,active:true});
-    closeModal();rdKpisMgmt();
-  }},{l:'Cancelar',fn:closeModal}]);
-}
-function openEditKpi(kid){
-  const k=KPIS.find(x=>x.id===kid);if(!k)return;
-  openModal('Editar KPI',`
-    <div class="fg"><label>Nome</label><input id="ek-n" value="${k.name}"></div>
-    <div class="two-col"><div class="fg"><label>Unidade</label><input id="ek-u" value="${k.unit}"></div>
-    <div class="fg"><label>Tipo</label><select id="ek-t"><option value="maior"${k.type==='maior'?' selected':''}>↑ Quanto maior melhor</option><option value="menor"${k.type==='menor'?' selected':''}>↓ Quanto menor melhor</option></select></div></div>
-  `,[{l:'Salvar',y:true,fn:()=>{k.name=document.getElementById('ek-n').value;k.unit=document.getElementById('ek-u').value;k.type=document.getElementById('ek-t').value;closeModal();rdKpisMgmt();}},{l:'Cancelar',fn:closeModal}]);
-}
-function toggleKpi(kid){const k=KPIS.find(x=>x.id===kid);if(k)k.active=!k.active;rdKpisMgmt();}
+    </div><!-- .app-inner -->
+  </div><!-- #app-screen -->
 
-// ============ SETTINGS ============
-function rdSettings(){
-  let h=`<div class="page-title">Minha Conta</div><div class="page-sub">Edite suas informações e senha</div>
-  <div id="settings-msg"></div>
-  <div class="card" style="margin-bottom:14px;max-width:480px"><div class="card-p">
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--lgray)">
-      <div style="width:52px;height:52px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900">${CU.av}</div>
-      <div><div style="font-size:17px;font-weight:800">${CU.name}</div><div style="font-size:12px;color:var(--gray)">${CU.email}</div></div>
-    </div>
-    <div style="font-size:13px;font-weight:800;margin-bottom:12px">Dados pessoais</div>
-    <div class="fg"><label>Nome completo</label><input id="s-n" value="${CU.name}"></div>
-    <div class="fg"><label>E-mail</label><input id="s-e" type="email" value="${CU.email}"></div>
-    <button class="btn btn-y" onclick="saveSettings()"><i class="ti ti-check" style="font-size:13px"></i> Salvar dados</button>
-  </div></div>
-  <div class="card" style="max-width:480px"><div class="card-p">
-    <div style="font-size:13px;font-weight:800;margin-bottom:12px">Alterar senha</div>
-    <div class="fg"><label>Senha atual</label><input id="s-op" type="password" placeholder="Senha atual"></div>
-    <div class="fg"><label>Nova senha</label><input id="s-np" type="password" placeholder="Nova senha"></div>
-    <div class="fg"><label>Confirmar senha</label><input id="s-cp" type="password" placeholder="Confirme a nova senha"></div>
-    <button class="btn btn-y" onclick="savePw()"><i class="ti ti-key" style="font-size:13px"></i> Alterar senha</button>
-  </div></div>`;
-  document.getElementById('p-settings').innerHTML=h;
-}
-function saveSettings(){
-  const n=document.getElementById('s-n').value;const e=document.getElementById('s-e').value;
-  if(!n||!e){showMsg('settings-msg','err','Preencha nome e e-mail.');return;}
-  CU.name=n;CU.email=e;CU.av=n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  const u=USERS.find(x=>x.id===CU.id);if(u){u.name=n;u.email=e;u.av=CU.av;}
-  document.getElementById('u-av').textContent=CU.av;document.getElementById('u-name').textContent=CU.name;
-  showMsg('settings-msg','ok','Dados atualizados com sucesso!');
-}
-function savePw(){
-  const op=document.getElementById('s-op').value;const np=document.getElementById('s-np').value;const cp=document.getElementById('s-cp').value;
-  if(op!==CU.pw){showMsg('settings-msg','err','Senha atual incorreta.');return;}
-  if(!np){showMsg('settings-msg','err','Informe a nova senha.');return;}
-  if(np!==cp){showMsg('settings-msg','err','As novas senhas não conferem.');return;}
-  CU.pw=np;const u=USERS.find(x=>x.id===CU.id);if(u)u.pw=np;
-  showMsg('settings-msg','ok','Senha alterada com sucesso!');
-  document.getElementById('s-op').value='';document.getElementById('s-np').value='';document.getElementById('s-cp').value='';
-}
+  <!-- Modal portal -->
+  <div id="modal-ct"></div>
+  <!-- Print portal -->
+  <div id="print-area" style="display:none"></div>
 
-// ============ MODAL ============
-function openModal(title,bodyHtml,btns){
-  document.getElementById('modal-ct').innerHTML=`
-  <div class="modal-overlay open" onclick="if(event.target===this)closeModal()">
-    <div class="modal-box">
-      <div class="modal-head"><h3>${title}</h3><button class="modal-close" onclick="closeModal()">×</button></div>
-      <div class="modal-body">${bodyHtml}</div>
-      <div class="modal-foot">${btns.map(b=>`<button class="btn ${b.y?'btn-y':''}" onclick="(${b.fn.toString()})()">${b.l}</button>`).join('')}</div>
-    </div>
-  </div>`;
-}
-function closeModal(){document.getElementById('modal-ct').innerHTML='';}
-</script>
+</div><!-- .app -->
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/helpers.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/export.js"></script>
+<script src="js/pages/dashboard.js"></script>
+<script src="js/pages/kpis-semanais.js"></script>
+<script src="js/pages/fill.js"></script>
+<script src="js/pages/metas.js"></script>
+<script src="js/pages/history.js"></script>
+<script src="js/pages/detail.js"></script>
+<script src="js/pages/users.js"></script>
+<script src="js/pages/areas.js"></script>
+<script src="js/pages/kpis-mgmt.js"></script>
+<script src="js/pages/settings.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
